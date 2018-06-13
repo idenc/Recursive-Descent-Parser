@@ -27,6 +27,7 @@ public class ExpressionTree {
         }
         Scanner sc = new Scanner(line);
         root = expression(sc);
+        sc.close();
     }
 
     /**
@@ -133,8 +134,12 @@ public class ExpressionTree {
         p1 = term(sc); // calls method that parses a term
         while (sc.hasNext("\\+") || sc.hasNext("-")) {
             oper = sc.next();
-            p2 = term(sc); // need to parse another term
-            p1 = new ExpTreeNode (oper, p1, p2); // left associative
+            if (sc.hasNext()) {
+                p2 = term(sc); // need to parse another term
+                p1 = new ExpTreeNode(oper, p1, p2); // left associative
+            } else {
+                throw new ParseException("Incomplete expression. Last operater was: " + oper, -1);
+            }
         }
         return p1 ;
     }
